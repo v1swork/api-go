@@ -1,0 +1,7 @@
+*.db
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+vendor/
+.env
