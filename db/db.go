@@ -23,7 +23,7 @@ func InitDB() {
 		age INTEGER,
 		login TEXT UNIQUE,
 		password TEXT
-	)`)
+	);`)
 
 	if err != nil {
 		log.Fatal(err)

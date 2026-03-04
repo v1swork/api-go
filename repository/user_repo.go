@@ -26,7 +26,28 @@ func RegisterUser(u models.User) (int64, error) {
 func GetUserByLogin(login string) (models.User, error) {
 	var u models.User
 	err := db.DB.QueryRow(
-		"SELECT id, name, age, login, password FROM users WHERE login = ?", login,
+		`SELECT id, name, age, login, password 
+		FROM users WHERE login = ?`, login,
 	).Scan(&u.ID, &u.Name, &u.Age, &u.Login, &u.Password)
 	return u, err
+}
+
+func GetAllUsers() ([]models.User, error) {
+	rows, err := db.DB.Query("SELECT id, name, age, login FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []models.User
+
+	for rows.Next() {
+		var u models.User
+		err := rows.Scan(&u.ID, &u.Name, &u.Age, &u.Login)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+	return users, nil
 }
