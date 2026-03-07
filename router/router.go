@@ -9,10 +9,10 @@ import (
 func SetupRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/register", handlers.Register)
-	mux.HandleFunc("/login", handlers.Login)
+	mux.HandleFunc("/register", middleware.CORSMiddleware(handlers.Register))
+	mux.HandleFunc("/login", middleware.CORSMiddleware(handlers.Login))
 
-	mux.HandleFunc("/users", middleware.AuthMiddleware(handlers.GetAllUsers))
+	mux.HandleFunc("/users", middleware.CORSMiddleware(middleware.AuthMiddleware(handlers.GetAllUsers)))
 	return mux
 }
 
