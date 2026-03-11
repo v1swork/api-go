@@ -15,19 +15,22 @@ async function login() {
             body: JSON.stringify(body)
             // {"login":"Ravil", "password": "123"}
         })
+
+        if (!res.ok) {
+            showMessage("login-msg", "Неверный логин или пароль", "error")
+            return
+        }
+
         const data = await res.json()
 
-        if (res.ok) {
-            localStorage.setItem("token", data.token)
-            showMessage("login-msg", "Успешный вход. Перенаправляем...", "success")
-            setTimeout(() => {
-                window.location.href = "/users.html"
-            }, 1000)
-        } else {
-            showMessage("login-msg", "Неверный логин или пароль", "error")
-        }
+        localStorage.setItem("token", data.token)
+        showMessage("login-msg", "Успешный вход. Перенаправляем...", "success")
+        setTimeout(() => {
+            window.location.href = "/users.html"
+        }, 1000)
     } catch (e) {
         showMessage("login-msg", "Сервер недоступен", "error")
+        console.log(e)
     }
 }
 
