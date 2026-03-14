@@ -6,7 +6,21 @@ async function register() {
         login:    document.getElementById("reg-login").value.trim(),
         password: document.getElementById("reg-password").value.trim(),
     }
-    if (body.name || body.age || body.login || body.password)
+    if (!body.name || !body.age || !body.login || !body.password) {
+        showMessage("reg-msg", "Заполните все поля", "error")
+        return
+    }
+    
+    if (body.age <= 0) {
+        showMessage("reg-msg", "Введите корректный возраст", "error")
+        return
+    }
+
+    if (body.password.length < 6) {
+        showMessage("reg-msg", "Пароль должен быть минимум 6 символов", "error")
+        return
+    }
+
     try {
         const res = await fetch(`${API}/register`, {
             method: "POST",
