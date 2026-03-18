@@ -15,25 +15,23 @@ import (
 // }
 
 func RegisterUser(u models.User) (int64, error) {
-	res, err := db.DB.Exec(`INSERT INTO users (name, age, login, password)
-	VALUES (?,?,?,?)`, u.Name, u.Age, u.Login, u.Password)
-	if err != nil {
-		return 0, err
-	}
-	return res.LastInsertId()
+	var id int64
+	err := db.DB.QueryRow(`INSERT INTO users (name, age, login, password)
+	VALUES ($1, $2, $3, $4) RETURNING id;`, u.Name, u.Age, u.Login, u.Password).Scan(&id)
+	return id, err
 }
 
 func GetUserByLogin(login string) (models.User, error) {
 	var u models.User
 	err := db.DB.QueryRow(
 		`SELECT id, name, age, login, password 
-		FROM users WHERE login = ?`, login,
+		FROM users WHERE login = $1;`, login,
 	).Scan(&u.ID, &u.Name, &u.Age, &u.Login, &u.Password)
 	return u, err
 }
 
 func GetAllUsers() ([]models.User, error) {
-	rows, err := db.DB.Query("SELECT id, name, age, login FROM users")
+	rows, err := db.DB.Query("SELECT id, name, age, login FROM users;")
 	if err != nil {
 		return nil, err
 	}
