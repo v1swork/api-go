@@ -2,13 +2,14 @@ package auth
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtSecret = []byte("Wreza3qoSp_uN8Py_4At")
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
